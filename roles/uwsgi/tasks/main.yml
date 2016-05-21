@@ -1,0 +1,33 @@
+- name: Create new configuration file for uwsgi
+  copy: src=uwsgi.ini.j2 dest="{{ app_root }}/{{ app_name }}_uwsgi.ini"
+
+- name: Create new directory for uwsgi logs
+  file: dest=/var/log/uwsgi state=directory
+
+- name: Change owner for uwsgi log
+  sudo: yes
+  file: path=/var/log/uwsgi owner={{ sys_user }} group={{ sys_user }}
+
+- name: Create new configuration file for uwsgi emperor
+  copy: src=uwsgi.conf.j2 dest=/etc/init/uwsgi.conf
+
+- name: Create vassals folder
+  file: dest=/etc/uwsgi/vassals state=directory
+
+- name: Change owner for vassals folder
+  sudo: yes
+  file: path=/etc/uwsgi/vassals owner={{ sys_user }} group={{ sys_user }}
+
+- name: Add link the file to uwsgi conf
+  file: src="{{ app_root }}/{{ app_name }}_uwsgi.ini" dest=/etc/uwsgi/vassals/{{ app_name }}_uwsgi.ini state=link
+
+- name: Change owner of app folder to www-data
+  command: sudo chown -R "{{ app_user }}:{{ app_user }}" "{{ app_root }}/"
+
+- name: Change owner of uwsgi log to www-data
+  sudo: yes
+  file: path=/var/log/uwsgi owner={{ app_user }} group={{ app_user }}
+
+- name: Now start uWSGI job
+  service: name=uwsgi state=restarted
+

@@ -1,0 +1,17 @@
+---
+ # Activate virtual environment
+ # Install flask and uwsgi
+
+- include: app-root.yml
+
+- name: Create Virtual Environment
+  shell: virtualenv "{{ app_root }}/venv"
+  args:
+    creates: "{{ app_root }}/venv/bin/activate"
+
+- name: Install flask in the virtual environment
+  pip: name=flask virtualenv="{{ app_root }}/venv"
+
+- name: Install uwsgi in the virtual environment
+  pip: name=uwsgi virtualenv="{{ app_root }}/venv"
+ 

@@ -1,0 +1,10 @@
+---
+ # Pull application from git repository
+
+- name: Setup ssh on remote to access git
+  copy: src={{ git_ssh_key }} dest="/home/{{ sys_user }}/.ssh/mygitkey" 
+        owner={{ sys_user }} group={{ sys_user }} mode=0600
+- name: Download application code from git
+  git: repo={{ git_app_repo }} dest="{{ app_root }}/app_code"
+       key_file="/home/{{ sys_user }}/.ssh/mygitkey"
+       accept_hostkey=yes

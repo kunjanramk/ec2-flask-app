@@ -1,0 +1,5 @@
+---
+ # Run apt-get upgrade
+
+- name: Update all packages
+  apt: upgrade=dist

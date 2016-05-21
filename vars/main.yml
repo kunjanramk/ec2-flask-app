@@ -1,0 +1,32 @@
+---
+ # Common variables for ec2-flask-app
+
+# Application variables
+app_root: /var/www/ec2-flask-app
+app_name: ec2-flask-app
+app_user: www-data
+server_name: flask-app-server
+
+# Application git repo
+git_app_repo: ssh://git@github.com/kunjanramk/hello-world.git
+git_ssh_key: /home/ubuntu/.ssh/mygitkey
+
+# System variables
+sys_user: ubuntu
+
+# EC2 variables
+instance_type: t2.micro
+security_group: newsecgrp
+image: ami-25c00c46
+region: ap-southeast-1
+keypair: newawskey
+
+# Required common packages
+common_packages:
+  - python
+  - build-essential
+  - python-dev
+  - python-virtualenv
+  - libpq-dev
+  - git
+  - build-essential

@@ -1,0 +1,12 @@
+---
+ # Remove defaults and config as per our application requirements
+
+- name: Remove Nginx's default site configuration
+  file: path=/etc/nginx/sites-enabled/default state=absent
+
+- name: Create new configuration file for our application
+  copy: src=nginx.conf.j2 dest="{{ app_root }}/{{ app_name }}_nginx.conf"
+
+- name: Add symlink the file to nginx's configuration file
+  file: src="{{ app_root }}/{{ app_name }}_nginx.conf" dest=/etc/nginx/conf.d/{{ app_name }}_nginx.conf state=link
+  notify: Restart Nginx

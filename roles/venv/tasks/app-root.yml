@@ -1,0 +1,10 @@
+---
+ # Create application root folder
+
+- name: Create Application root folder
+  file: path={{ app_root }} state=directory
+
+- name: Change owner to "{{ sys_user }}"
+  sudo: yes
+  file: path={{ app_root }} owner={{ sys_user }} group={{ sys_user }}
+

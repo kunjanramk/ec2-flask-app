@@ -1,0 +1,15 @@
+---
+ #Add Nginx repositories, update and upgrade packages
+ #Also install all required packages
+
+- include: nginx-repo.yml
+
+- include: update.yml
+
+- include: upgrade.yml
+
+- name: Install and ensure packages required
+  apt: pkg={{ item }} state=present
+  sudo: true
+  with_items: common_packages
+

@@ -1,0 +1,5 @@
+---
+ #Add Nginx repositories to apt-get sources
+
+- name: add-nginx-repo
+  apt_repository: repo='ppa:nginx/stable'
