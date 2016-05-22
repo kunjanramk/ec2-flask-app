@@ -5,16 +5,41 @@
     hosts: local
     connection: local
     gather_facts: False
-    tags: provisioning
+    tags: ec2-provisioning
     vars_files:
       - vars/main.yml
-      - /vars/keys.yml
+      - /vars/keys.yml  # AWS ACCESS and SECRET keys are not in repo, store it locally for security
     tasks:
+      - name: Create a Security group for EC2 instance
+        ec2_group:
+          name: "{{ app_name }}_sec_grp"
+          description: "{{ app_name }} security group"
+          region: "{{ region }}"
+          aws_access_key: "{{ access_key }}"
+          aws_secret_key: "{{ secret_key }}"
+          rules:
+            - proto: tcp
+              type: ssh
+              from_port: 22
+              to_port: 22
+              cidr_ip: 0.0.0.0/0
+            - proto: tcp
+              type: http
+              from_port: 80
+              to_port: 80
+              cidr_ip: 0.0.0.0/0
+            - proto: tcp
+              type: https
+              from_port: 443
+              to_port: 443
+              cidr_ip: 0.0.0.0/0
+        register: base_sg
+
       - name: Launch new EC2 instance
         local_action:
           module: ec2
           instance_tags: "Name={{ server_name }}"
-          group: "{{ security_group }}"
+          group_id: "{{ base_sg.group_id }}"
           instance_type: "{{ instance_type}}"
           image: "{{ image }}"
           wait: true
@@ -37,6 +62,7 @@
     sudo: yes
     remote_user: "{{ sys_user }}"
     gather_facts: True
+    tags: app-deployment
     roles:
       - init
       - nginx-install
@@ -44,3 +70,20 @@
       - app-repo
       - nginx-conf
       - uwsgi
+#
+# The above roles does the following tasks
+# init          => This will add nginx repositories to apt-get sources and does apt-get update i
+#                  and apt-get upgrade. This will also install are required packages like python,
+#                  build-essential, python-dev, python-virtualenv, git, etc..
+# nginx-install => This will just install nginx package on the instance
+# venv          => In this role, we create a folder for the application. Create and activate
+#                  virtual environment and install flask in it. It will also install uwsgi, which
+#                  is a non-FastCGI method for deploying python applications with nginx server
+# app-repo      => This will be used to pull your application code from git repo and store
+#                  it locally.
+# nginx-conf    => Here we remove nginx default configuration and create new configuration
+#                  for our application and link appropriately. At the end we restart nginx
+#                  service to pick new configurations
+# uwsgi         => This will configure uwsgi for our application. We will also configure uwsgi
+#                  emperor to automatically spawn uwsgi processes to execute our application.
+#
