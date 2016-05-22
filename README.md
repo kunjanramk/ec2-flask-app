@@ -21,8 +21,29 @@ This will automatically launch an ec2 instance, install nginx, flask &amp; other
       aws keys:
         You need to create an IAM user with appropriate permissions to create EC2 instances. Download the access and secret keys for the user. We need to pass these keys to create EC2 instance. There are different ways 
 ## Synopsis:
-
+     ansible-playbook -i ec2-inv site.yml --private-key path/to/private-key
+       This private key will be used for ssh to ec2 instance by ansible
 ## An overview of the roles being used:
+   1. init
+      This will add nginx repositories to apt-get sources and does apt-get update
+      and apt-get upgrade. This will also install are required packages like python,
+      build-essential, python-dev, python-virtualenv, git, etc..
+   2. nginx-install
+      This will just install nginx package on the instance
+   3. venv
+      In this role, we create a folder for the application. Create and activate
+      virtual environment and install flask in it. It will also install uwsgi, which
+      is a non-FastCGI method for deploying python applications with nginx server
+   4. app-repo
+      This will be used to pull your application code from git repo and store
+      it locally.
+   5. nginx-conf
+      Here we remove nginx default configuration and create new configuration
+      for our application and link appropriately. At the end we restart nginx
+      service to pick new configurations
+   6. uwsgi
+      This will configure uwsgi for our application. We will also configure uwsgi
+      emperor to automatically spawn uwsgi processes to execute our application.
 
 ## References:
 
