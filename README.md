@@ -27,16 +27,31 @@ This will automatically launch an ec2 instance, install nginx, flask &amp; other
    1. init:
       This will add nginx repositories to apt-get sources and does apt-get update
       and apt-get upgrade. This will also install are required packages like python,
-      build-essential, python-dev, python-virtualenv, git, etc..
+      build-essential, python-dev, python-virtualenv, git, etc..  
+
    2. nginx-install:
-      This will just install nginx package on the instance
+      This will just install nginx package on the instance  
+
    3. venv:
       In this role, we create a folder for the application. Create and activate
       virtual environment and install flask in it. It will also install uwsgi, which
-      is a method for deploying python or flask applications with nginx server
+      is a method for deploying python or flask applications with nginx server  
+
    4. app-repo:
       This will be used to pull your application code from git repo and store
-      it locally.
+      it locally.  
+      Here the flask application is in git@github.com:kunjanramk/hello-world.git  
+      ```
+      # Hello World using flask
+      from flask import Flask
+      app = Flask(__name__)
+      @app.route("/")
+      def hello():
+        return "Hello World!"
+      if __name__ == "__main__":
+        app.run(host='0.0.0.0', port=80)
+     ```
+    
    5. nginx-conf:
       Here we remove nginx default configuration and create new configuration
       for our application and link appropriately. At the end we restart nginx
