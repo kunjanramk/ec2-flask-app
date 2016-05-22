@@ -42,43 +42,43 @@ This will automatically launch an ec2 instance, install nginx, flask &amp; other
       for our application and link appropriately. At the end we restart nginx
       service to pick new configurations
 
-      ### roles/nginx-conf/files/nginx.conf.j2  
-        server {
-            listen      80;
-            server_name localhost;
-            charset     utf-8;
-            client_max_body_size 75M;
-            location / { try_files $uri @myapp; }
-            location @myapp {
-                include uwsgi_params;
-                uwsgi_pass unix:/var/www/ec2-flask-app/ec2-flask-app_uwsgi.sock;
-            }
-        }
+      ### Configuration file located at roles/nginx-conf/files/nginx.conf.j2  
+        server {  
+            listen      80;  
+            server_name localhost;  
+            charset     utf-8;  
+            client_max_body_size 75M;  
+            location / { try_files $uri @myapp; }  
+            location @myapp {  
+                include uwsgi_params;  
+                uwsgi_pass unix:/var/www/ec2-flask-app/ec2-flask-app_uwsgi.sock;  
+            }  
+        }   
 
    6. uwsgi:
       This will configure uwsgi for our application. We will also configure uwsgi
       emperor to automatically spawn uwsgi processes to execute our application.  
 
       ### roles/uwsgi/files/uwsgi.conf.j2  
-        description "uWSGI"
-        start on runlevel [2345]
-        stop on runlevel [06]
-        respawn
-        env UWSGI=/var/www/ec2-flask-app/venv/bin/uwsgi
-        env LOGTO=/var/log/uwsgi/emperor.log
+        description "uWSGI"  
+        start on runlevel [2345]  
+        stop on runlevel [06]  
+        respawn  
+        env UWSGI=/var/www/ec2-flask-app/venv/bin/uwsgi  
+        env LOGTO=/var/log/uwsgi/emperor.log  
         exec $UWSGI --master --emperor /etc/uwsgi/vassals --die-on-term --uid www-data --gid www-data --logto $LOGTO  
 
        ### roles/uwsgi/files/uwsgi.ini.j2  
-            [uwsgi]
-            base = /var/www/ec2-flask-app  #application's base folder
-            app = hello
-            module = %(app)  #python module to import
-            home = %(base)/venv
-            pythonpath = %(base)/app_code
-            socket = %(base)/%n.sock  #socket file's location
-            chmod-socket    = 666  #permissions for the socket file
-            callable = app  #the variable that holds a flask application inside the module imported at line #6
-            logto = /var/log/uwsgi/%n.log  #location of log files
+            [uwsgi]  
+            base = /var/www/ec2-flask-app  #application's base folder  
+            app = hello  
+            module = %(app)  #python module to import  
+            home = %(base)/venv  
+            pythonpath = %(base)/app_code  
+            socket = %(base)/%n.sock  #socket file's location  
+            chmod-socket    = 666  #permissions for the socket file  
+            callable = app  #the variable that holds a flask application inside the module imported at line #6  
+            logto = /var/log/uwsgi/%n.log  #location of log files  
 
       
 ## Useful Resources:
