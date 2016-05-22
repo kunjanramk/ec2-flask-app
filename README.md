@@ -23,7 +23,7 @@ This will automatically launch an ec2 instance, install nginx, flask &amp; other
 ## Synopsis:
      ansible-playbook -i ec2-inv site.yml --private-key path/to/private-key
        This private key will be used for ssh to ec2 instance by ansible
-## An overview of the roles being used:
+## An overview of the playbook roles being used:
    1. init:
       This will add nginx repositories to apt-get sources and does apt-get update
       and apt-get upgrade. This will also install are required packages like python,
