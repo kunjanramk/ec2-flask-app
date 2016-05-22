@@ -40,14 +40,14 @@ This will automatically launch an ec2 instance, install nginx, flask &amp; other
    5. nginx-conf:
       Here we remove nginx default configuration and create new configuration
       for our application and link appropriately. At the end we restart nginx
-      service to pick new configurations  
+      service to pick new configurations
+
       ### roles/nginx-conf/files/nginx.conf.j2  
         server {
             listen      80;
             server_name localhost;
             charset     utf-8;
             client_max_body_size 75M;
-
             location / { try_files $uri @myapp; }
             location @myapp {
                 include uwsgi_params;
@@ -58,6 +58,7 @@ This will automatically launch an ec2 instance, install nginx, flask &amp; other
    6. uwsgi:
       This will configure uwsgi for our application. We will also configure uwsgi
       emperor to automatically spawn uwsgi processes to execute our application.  
+
       ### roles/uwsgi/files/uwsgi.conf.j2  
         description "uWSGI"
         start on runlevel [2345]
