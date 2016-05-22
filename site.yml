@@ -78,7 +78,7 @@
 # nginx-install => This will just install nginx package on the instance
 # venv          => In this role, we create a folder for the application. Create and activate
 #                  virtual environment and install flask in it. It will also install uwsgi, which
-#                  is a non-FastCGI method for deploying python applications with nginx server
+#                  is a method for deploying python or flask applications with nginx server
 # app-repo      => This will be used to pull your application code from git repo and store
 #                  it locally.
 # nginx-conf    => Here we remove nginx default configuration and create new configuration

@@ -33,7 +33,7 @@ This will automatically launch an ec2 instance, install nginx, flask &amp; other
    3. venv:
       In this role, we create a folder for the application. Create and activate
       virtual environment and install flask in it. It will also install uwsgi, which
-      is a non-FastCGI method for deploying python applications with nginx server
+      is a method for deploying python or flask applications with nginx server
    4. app-repo:
       This will be used to pull your application code from git repo and store
       it locally.
@@ -45,5 +45,13 @@ This will automatically launch an ec2 instance, install nginx, flask &amp; other
       This will configure uwsgi for our application. We will also configure uwsgi
       emperor to automatically spawn uwsgi processes to execute our application.
 
-## References:
+## Useful Resources:
+1. [Ansible Introduction] (http://docs.ansible.com/ansible/intro.html)
+2. [Playbooks Tutorial] (http://docs.ansible.com/ansible/playbooks.html)
+3. [BOTO ec2_group Module] (http://docs.ansible.com/ansible/ec2_group_module.html)
+4. [BOTO ec2 Module] (http://docs.ansible.com/ansible/ec2_module.html)
+5. [nginx wiki] (https://www.nginx.com/resources/wiki/)
+6. [Flask Quickstart] (http://flask.pocoo.org/docs/0.10/quickstart/)
+7. [Flask deployment with nginx and uwsgi] (http://flask.pocoo.org/docs/0.10/deploying/uwsgi/)
+8. [uWSGI Quickstart] (https://uwsgi-docs.readthedocs.io/en/latest/WSGIquickstart.html)
 
