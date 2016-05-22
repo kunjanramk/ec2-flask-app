@@ -42,7 +42,8 @@ This will automatically launch an ec2 instance, install nginx, flask &amp; other
       for our application and link appropriately. At the end we restart nginx
       service to pick new configurations
 
-      ### Configuration file located at roles/nginx-conf/files/nginx.conf.j2  
+      ### nginx configuration file located at roles/nginx-conf/files/nginx.conf.j2
+      ```
         server {  
             listen      80;  
             server_name localhost;  
@@ -54,21 +55,14 @@ This will automatically launch an ec2 instance, install nginx, flask &amp; other
                 uwsgi_pass unix:/var/www/ec2-flask-app/ec2-flask-app_uwsgi.sock;  
             }  
         }   
+      ```
 
    6. uwsgi:
       This will configure uwsgi for our application. We will also configure uwsgi
       emperor to automatically spawn uwsgi processes to execute our application.  
 
-      ### roles/uwsgi/files/uwsgi.conf.j2  
-        description "uWSGI"  
-        start on runlevel [2345]  
-        stop on runlevel [06]  
-        respawn  
-        env UWSGI=/var/www/ec2-flask-app/venv/bin/uwsgi  
-        env LOGTO=/var/log/uwsgi/emperor.log  
-        exec $UWSGI --master --emperor /etc/uwsgi/vassals --die-on-term --uid www-data --gid www-data --logto $LOGTO  
-
-       ### roles/uwsgi/files/uwsgi.ini.j2  
+      ### uwsgi configuration file located at roles/uwsgi/files/uwsgi.ini.j2  
+      ```
             [uwsgi]  
             base = /var/www/ec2-flask-app  #application's base folder  
             app = hello  
@@ -79,8 +73,20 @@ This will automatically launch an ec2 instance, install nginx, flask &amp; other
             chmod-socket    = 666  #permissions for the socket file  
             callable = app  #the variable that holds a flask application inside the module imported at line #6  
             logto = /var/log/uwsgi/%n.log  #location of log files  
+     ```
 
-      
+      ### uwsgi emperor configuration file located at roles/uwsgi/files/uwsgi.conf.j2  
+      ```
+        description "uWSGI"  
+        start on runlevel [2345]  
+        stop on runlevel [06]  
+        respawn  
+        env UWSGI=/var/www/ec2-flask-app/venv/bin/uwsgi  
+        env LOGTO=/var/log/uwsgi/emperor.log  
+        exec $UWSGI --master --emperor /etc/uwsgi/vassals --die-on-term --uid www-data --gid www-data --logto $LOGTO  
+     ```
+
+
 ## Useful Resources:
 1. [Ansible Introduction] (http://docs.ansible.com/ansible/intro.html)
 2. [Playbooks Tutorial] (http://docs.ansible.com/ansible/playbooks.html)
